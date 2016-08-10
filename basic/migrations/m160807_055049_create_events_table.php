@@ -12,7 +12,8 @@ class m160807_055049_create_events_table extends Migration
      */
     public function up()
     {
-        $this->createTable('events', [
+        $table = 'events';
+        $this->createTable($table, [
             'id' => $this->primaryKey(),
             'name'=>$this->string(256)->notNull()->unique()->comment('Название события'),
             'model'=>$this->string(256)->notNull()->comment('Полностью квалифицированное имя модели'),
@@ -22,6 +23,32 @@ class m160807_055049_create_events_table extends Migration
 
         //здесь можно было бы создать индекс по полям model, base_event, но не предполагается большое количество записей в этой таблице,
         //поэтому это не целесообразно
+
+        $this->insert($table,[
+            'id'=>1,
+            'name'=>'user_registered',
+            'model'=>'app\models\User',
+            'base_event'=>'insert',
+        ]);
+        $this->insert($table,[
+            'id'=>2,
+            'name'=>'user_unactivated',
+            'model'=>'app\models\User',
+            'base_event'=>'update',
+            'expression'=>'!is_active',
+        ]);
+        $this->insert($table,[
+            'id'=>3,
+            'name'=>'user_deleted',
+            'model'=>'app\models\User',
+            'base_event'=>'delete',
+        ]);
+        $this->insert($table,[
+            'id'=>4,
+            'name'=>'article_created',
+            'model'=>'app\models\Article',
+            'base_event'=>'insert',
+        ]);
     }
 
     /**
